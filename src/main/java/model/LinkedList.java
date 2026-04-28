@@ -75,7 +75,32 @@ public class LinkedList <T> implements List<T> {
 
     @Override
     public void remove(T element) throws ListException {
+        if(isEmpty()){
+            throw new ListException("Linked List is empty");
 
+        }
+        //Caso 1. Cuando el elemento a suprimir es el primero en la lista
+        if(equals(head.data, element)){
+            head = head.next;
+
+        }
+        //Caso general. El elemento a suprimir puede estar en el medio o al final
+        else{
+            Node<T> prev = head; //Dejamos un rastro en el nodo anterior al que vayamos a eliminar
+            while(prev.next != null){
+                if(equals(prev.next.data, element)){
+                    //Ya encontre el elemento a eliminar
+                    Node<T> removed = prev.next;
+                    //desenlazo el nodo
+                    prev.next = removed.next;//Se brinca el nodo a suprimir
+                    return; //Se sale del metodo
+
+                }
+                //Al final dejamos tail en el ultimo nodo
+                //Si la lista queda vacia, se asigna null
+                tail = head!=null ? getNodeByIndex(indexOf(getLast())) : null;
+            }
+        }
 
     }
 
@@ -244,6 +269,20 @@ public class LinkedList <T> implements List<T> {
         while(aux != null){
             if (equals(aux.data, element ))return aux;
             aux= aux.next;
+        }
+        return null;
+    }
+
+    public Node<T> getNodeByIndex(int index) throws ListException{
+        if(isEmpty()){
+            throw new ListException("Linked list is empty");
+        }
+        Node<T> aux = head;
+        int pos = 1; //La posicion del primer nodo
+        while(aux != null){
+            if (pos==index )return aux;
+            aux= aux.next;
+            pos++;
         }
         return null;
     }

@@ -1,7 +1,6 @@
 package model;
 
 public class Employee extends Person{
-
     private String jobPosition;
 
     public Employee(String id, String name, int age, double heigth, double weight, String jobPosition) {
@@ -10,8 +9,12 @@ public class Employee extends Person{
     }
 
     @Override
-    public String getRoleDescription(){
-        return "Empleado, cargo: " + jobPosition;
+    public String getRoleDescription() {
+        return "";
+    }
 
+    @Override
+    public String toString() {
+        return super.toString() + "\n" + getRoleDescription();
     }
 }

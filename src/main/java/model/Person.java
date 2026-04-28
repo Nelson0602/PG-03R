@@ -1,24 +1,46 @@
 package model;
 
 public abstract class Person {
+    private String id;
+
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getAge() {
         return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public double getHeigth() {
         return heigth;
     }
 
+    public void setHeigth(double heigth) {
+        this.heigth = heigth;
+    }
+
     public double getWeight() {
         return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
     public Person(String id, String name, int age, double heigth, double weight) {
@@ -27,11 +49,8 @@ public abstract class Person {
         this.age = age;
         this.heigth = heigth;
         this.weight = weight;
-
-
     }
 
-    private String id;
     private String name;
     private int age;
     private double heigth;
@@ -43,14 +62,4 @@ public abstract class Person {
 
 
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", age='" + age + '\'' +
-                ", heigth='" + heigth + '\'' +
-                ", weight='" + weight + '\'' +
-                '}';
-    }
 }
