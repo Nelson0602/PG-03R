@@ -27,6 +27,8 @@ public abstract class Person {
         this.age = age;
         this.heigth = heigth;
         this.weight = weight;
+
+
     }
 
     private String id;
