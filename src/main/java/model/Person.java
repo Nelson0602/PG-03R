@@ -1,60 +1,54 @@
 package model;
 
 public abstract class Person {
-    private String id;
-    private String name;
-    private String age;
-    private String heigth;
-    private String  weight;
-
-    public Person(String id, String name, String age, String heigth, String weight) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.heigth = heigth;
-        this.weight = weight;
+    public String getId() {
+        return id;
     }
-
-    public abstract String getRoleDescription();
-
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
-        this.age = age;
-    }
-
-    public String getHeigth() {
+    public double getHeigth() {
         return heigth;
     }
 
-    public void setHeigth(String heigth) {
-        this.heigth = heigth;
-    }
-
-    public String getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(String weight) {
+    public Person(String id, String name, int age, double heigth, double weight) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.heigth = heigth;
         this.weight = weight;
+    }
+
+    private String id;
+    private String name;
+    private int age;
+    private double heigth;
+    private double  weight;
+
+
+
+    public abstract String getRoleDescription();
+
+
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", heigth='" + heigth + '\'' +
+                ", weight='" + weight + '\'' +
+                '}';
     }
 }
