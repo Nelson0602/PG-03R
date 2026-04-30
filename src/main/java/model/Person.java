@@ -3,6 +3,7 @@ package model;
 public abstract class Person {
     private String id;
 
+
     public String getId() {
         return id;
     }
