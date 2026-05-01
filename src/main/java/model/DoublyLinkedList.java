@@ -2,29 +2,26 @@ package model;
 
 public class DoublyLinkedList<T> implements List<T> {
 
-    private Node<T> head;//inicio de la lista
-    private Node<T> tail;//final de la lista
-
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
-    public int size() throws ListException {
-        if (isEmpty()) {
-            throw new ListException("Linked List is empty");
-        }
+    public int size() {
         Node<T> aux = head;
         int count = 0;
+
         while (aux != null) {
             count++;
             aux = aux.next;
         }
+
         return count;
     }
 
-
     @Override
     public void clear() {
-        head = tail = null;
-
+        head = null;
+        tail = null;
     }
 
     @Override
@@ -35,87 +32,95 @@ public class DoublyLinkedList<T> implements List<T> {
     @Override
     public void add(T element) {
         Node<T> node = new Node<>(element);
-        if (head == null) {
+
+        if (isEmpty()) {
             head = node;
             tail = node;
         } else {
-            //significa que head apunta a un nodo existente
-            Node<T> aux = head;
-            //me muevo por la lista hasta alcanzar el ultimo elemento
-            while (aux.next != null) {
-                //aux.next es la flecha
-                aux = aux.next;//lo mueve al siguiente nodo
-
-            }
-            //cuando se sale del while, aux.next es igual a null
-            aux.next = node;
-
-            //Hacemos el doble enlace
-            node.prev = aux;
-
-            tail = node;//lo ponemos a apuntar al ultimo nodo de la lista
-
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
-
     }
 
     @Override
     public void addFirst(T element) {
         Node<T> node = new Node<>(element);
-        node.next = head;
 
-        head.prev = node;
-        head = node;//para que el nuevo nodo quede de primero
-
+        if (isEmpty()) {
+            head = node;
+            tail = node;
+        } else {
+            node.next = head;
+            head.prev = node;
+            head = node;
+        }
     }
 
     @Override
     public void addLast(T element) {
         add(element);
-
     }
 
     @Override
-    public void addInSortedList(T element) {//agregar en forma ordenada, BUSCAR
+    public void addInSortedList(T element) {
+        Node<T> node = new Node<>(element);
 
+        if (isEmpty()) {
+            head = node;
+            tail = node;
+            return;
+        }
+
+        if (compare(element, head.data) <= 0) {
+            addFirst(element);
+            return;
+        }
+
+        if (compare(element, tail.data) >= 0) {
+            addLast(element);
+            return;
+        }
+
+        Node<T> aux = head;
+
+        while (aux.next != null && compare(aux.next.data, element) < 0) {
+            aux = aux.next;
+        }
+
+        node.next = aux.next;
+        node.prev = aux;
+        aux.next.prev = node;
+        aux.next = node;
     }
 
     @Override
     public void remove(T element) throws ListException {
         if (isEmpty()) {
             throw new ListException("Linked List is empty");
-
         }
-        //Caso 1. Cuando el elemento a suprimir es el primero en la lista
-        if (equals(head.data, element)) {
-            head = head.next;
-            if (head != null) {
-                head.prev = null;
 
-            }
+        Node<T> aux = head;
 
-        }
-        //Caso general. El elemento a suprimir puede estar en el medio o al final
-        else {
-            Node<T> prev = head; //Dejamos un rastro en el nodo anterior al que vayamos a eliminar
-            while (prev.next != null) {
-                if (equals(prev.next.data, element)) {
-                    //Ya encontre el elemento a eliminar
-                    Node<T> removed = prev.next;
-                    //desenlazo el nodo
-                    prev.next = removed.next;//Se brinca el nodo a suprimir
-                    if (removed.next != null) {
-                        removed.next.prev = prev;
-
-                    }
-                    break;//rompemos el buble
+        while (aux != null) {
+            if (equals(aux.data, element)) {
+                if (aux == head) {
+                    removeFirst();
+                    return;
                 }
-                //Al final dejamos tail en el ultimo nodo
-                //Si la lista queda vacia, se asigna null
-                tail = head != null ? getNodeByIndex(indexOf(getLast())) : null;
-            }
-        }
 
+                if (aux == tail) {
+                    removeLast();
+                    return;
+                }
+
+                aux.prev.next = aux.next;
+                aux.next.prev = aux.prev;
+                return;
+            }
+
+            aux = aux.next;
+        }
     }
 
     @Override
@@ -123,8 +128,16 @@ public class DoublyLinkedList<T> implements List<T> {
         if (isEmpty()) {
             throw new ListException("Linked List is empty");
         }
+
         T first = head.data;
-        head = head.next;
+
+        if (head == tail) {
+            clear();
+        } else {
+            head = head.next;
+            head.prev = null;
+        }
+
         return first;
     }
 
@@ -132,31 +145,22 @@ public class DoublyLinkedList<T> implements List<T> {
     public T removeLast() throws ListException {
         if (isEmpty()) {
             throw new ListException("Linked List is empty");
+        }
 
+        T last = tail.data;
+
+        if (head == tail) {
+            clear();
+        } else {
+            tail = tail.prev;
+            tail.next = null;
         }
-        Node<T> aux = head;
-        Node<T> prev = head;
-        while (aux.next != null) {
-            prev = aux; // dejamos un ratro en el nodo anterior a aux
-            aux = aux.next;
-        }
-        // se sale del while cuando aux está en el último nodo
-        T last = aux.data; // la data del último nodo
-        prev.next = null;
-        tail = prev; //para que tail quede apuntando al último nodo
-        // que pasa si la lista tiene un solo nodo
-        if (prev == aux) clear();// anulamos la lista
+
         return last;
-
     }
 
     @Override
-    public boolean contains(T element) throws ListException {
-
-        if (isEmpty()) {
-            throw new ListException("Linked List is empty");
-        }
-
+    public boolean contains(T element) {
         Node<T> aux = head;
 
         while (aux != null) {
@@ -171,23 +175,46 @@ public class DoublyLinkedList<T> implements List<T> {
     }
 
     @Override
-    public void sort() throws ListException {
+    public void sort() {
+        if (isEmpty() || head.next == null) {
+            return;
+        }
 
+        boolean swapped;
+
+        do {
+            swapped = false;
+            Node<T> aux = head;
+
+            while (aux.next != null) {
+                if (compare(aux.data, aux.next.data) > 0) {
+                    T temp = aux.data;
+                    aux.data = aux.next.data;
+                    aux.next.data = temp;
+                    swapped = true;
+                }
+
+                aux = aux.next;
+            }
+
+        } while (swapped);
     }
 
     @Override
-    public int indexOf(T element) throws ListException {
-        if (isEmpty()) {
-            throw new ListException("Linked List is empty");
-        }
+    public int indexOf(T element) {
         Node<T> aux = head;
-        int index = 1;//el indice de la lista enlazada inicia en 1.
+        int index = 1;
+
         while (aux != null) {
-            if (equals(aux.data, element)) return index;
+            if (equals(aux.data, element)) {
+                return index;
+            }
+
             index++;
             aux = aux.next;
         }
-        return -1; //esto indica que no encontro el elemento
+
+        return -1;
     }
 
     @Override
@@ -195,6 +222,7 @@ public class DoublyLinkedList<T> implements List<T> {
         if (isEmpty()) {
             throw new ListException("Linked list is empty");
         }
+
         return head.data;
     }
 
@@ -203,55 +231,50 @@ public class DoublyLinkedList<T> implements List<T> {
         if (isEmpty()) {
             throw new ListException("Linked list is empty");
         }
+
         return tail.data;
     }
 
     @Override
-    public T getPrev(T element) throws ListException {
-        Node<T> aux = head;
+    public T getPrev(T element) {
+        Node<T> node = findNode(element);
 
-        if (head.data == element) {
-            aux = null;
+        if (node != null && node.prev != null) {
+            return node.prev.data;
         }
-        while (aux.next != null) {
-            if (equals(aux.next.data, element)) {
-                break;
-            } else {
-                aux = aux.next;
-            }
-        }
-        return aux.data;
+
+        return null;
     }
 
     @Override
-    public T getNext(T element) throws ListException {
-        Node<T> aux = head;
+    public T getNext(T element) {
+        Node<T> node = findNode(element);
 
-        if (head.data == element) {
-            aux = null;
+        if (node != null && node.next != null) {
+            return node.next.data;
         }
-        while (aux != null) {
-            if (equals(aux.next.data, element)) {
-                aux = aux.next.next;
-                break;
-            } else {
-                aux = aux.next;
-            }
-        }
-        return aux.data;
+
+        return null;
     }
 
     @Override
-    public T get(int index) throws ListException {
-        if (isEmpty()) {
-            throw new ListException("Linked list is empty");
+    public T get(int index) {
+        if (index <= 0) {
+            return null;
         }
+
         Node<T> aux = head;
         int count = 1;
+
         while (aux != null) {
-            if (equals(count++ == index)) return aux.data;
+            if (count == index) {
+                return aux.data;
+            }
+
+            count++;
             aux = aux.next;
         }
+
         return null;
     }
 
@@ -263,36 +286,81 @@ public class DoublyLinkedList<T> implements List<T> {
         return head;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("HEAD →");
-        Node<T> aux = head;
-        while (aux.next != null) {
-            sb.append("[").append(aux.data).append("]");
-            if (aux.next != null) sb.append(" ←→ ");
-            aux = aux.next;
+    public Node<T> getNodeByIndex(int index) {
+        if (index <= 0) {
+            return null;
         }
 
-        sb.append(" → NULL");//que apunte a nulo en el ultimo nodo
-        return sb.toString();
-    }
-
-    /// ======================AYUDAS========================//
-    public Node<T> getNodeByIndex(int index) throws ListException {
-        if (isEmpty()) {
-            throw new ListException("Linked list is empty");
-        }
         Node<T> aux = head;
-        int pos = 1; //La posicion del primer nodo
+        int pos = 1;
+
         while (aux != null) {
-            if (pos == index) return aux;
+            if (pos == index) {
+                return aux;
+            }
+
             aux = aux.next;
             pos++;
         }
+
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("HEAD → ");
+        Node<T> aux = head;
+
+        while (aux != null) {
+            sb.append("[").append(aux.data).append("]");
+
+            if (aux.next != null) {
+                sb.append(" ←→ ");
+            }
+
+            aux = aux.next;
+        }
+
+        sb.append(" → NULL");
+        return sb.toString();
+    }
+
+    private Node<T> findNode(T element) {
+        Node<T> aux = head;
+
+        while (aux != null) {
+            if (equals(aux.data, element)) {
+                return aux;
+            }
+
+            aux = aux.next;
+        }
+
         return null;
     }
 
     private boolean equals(T a, T b) {
         return a == null ? b == null : a.equals(b);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private int compare(T a, T b) {
+        if (a == null && b == null) {
+            return 0;
+        }
+
+        if (a == null) {
+            return -1;
+        }
+
+        if (b == null) {
+            return 1;
+        }
+
+        if (a instanceof Comparable) {
+            return ((Comparable) a).compareTo(b);
+        }
+
+        return a.toString().compareTo(b.toString());
     }
 }

@@ -3,57 +3,64 @@ package model;
 import java.math.BigInteger;
 import java.util.Random;
 
+/**
+ * Busqueda aleatoria en un arreglo por medio de induces aleatorios
+ * Se utiliza algoritmos probabilisticos
+ * Devuelve un arreglo con el indice del valor buscado y el número de intentos realizadps
+ * Si el indice es -1, el valor no se encontró el elemento total  de intentos realizados
+ * */
+
 public class Probabilistic {
 
-    /**
-     * Busqueda aleatoria en un arreglo por medio de induces aleatorios
-     * Se utiliza algoritmos probabilisticos
-     * Devuelve un arreglo con el indice del valor buscado y el número de intentos realizadps
-     * Si el indice es -1, el valor no se encontró el elemento total  de intentos realizados
-     * */
+    private final Random random = new Random();
 
-    public int [] randomSearch (int [] arr, int value, int attempts){
-        int[] result = new int[2];
-        int count = 0;
-        //Random random = new Random();
+    public int[] randomSearch(int[] arr, int value, int attempts) {
+        int[] result = {-1, 0};
 
-        while (true) {
-            int index = new Random().nextInt(arr.length-1);
-            count++;
-            result[0] = index;
-            result[1] = ++count;
+        if (arr == null || arr.length == 0 || attempts <= 0) {
+            return result;
+        }
 
-            if (arr[index] == value) return result; //Si el indice del array es igual a la variable
+        for (int count = 1; count <= attempts; count++) {
+            int index = random.nextInt(arr.length);
 
-            if (count>= attempts){
-                result[0] = -1;
+            if (arr[index] == value) {
+                result[0] = index;
+                result[1] = count;
                 return result;
             }
         }
 
-    }
-
-    public String millerRabin(String bigNumber) {
-        String result="";
-        bigNumber = bigNumber.replaceAll("\\s+", "");
-        //BigInteger number = new BigInteger("104729"); // Ejemplo de número primo
-        BigInteger number = new BigInteger(bigNumber);
-        int k = 5; // Número de repeticiones del test de Miller-Rabin
-        if (isProbablePrime(number, k))
-            result += "The big number: " + number + " is probably prime.";
-        else
-            result += "The big number: " + number + " is not prime.";
+        result[0] = -1;
+        result[1] = attempts;
         return result;
     }
 
+    public String millerRabin(String bigNumber) {
+        bigNumber = bigNumber.replaceAll("\\s+", "");
+        BigInteger number = new BigInteger(bigNumber);
+        int k = 5;
+
+        if (isProbablePrime(number, k)) {
+            return "The big number: " + number + " is probably prime.";
+        } else {
+            return "The big number: " + number + " is not prime.";
+        }
+    }
+
     private boolean isProbablePrime(BigInteger n, int k) {
+        if (n.compareTo(BigInteger.ONE) <= 0) {
+            return false;
+        }
 
-        // Casos base
-        if (n.compareTo(BigInteger.ONE) <= 0) return false;
-        if (n.equals(BigInteger.TWO) || n.equals(BigInteger.valueOf(3))) return true;
-        if (n.mod(BigInteger.TWO).equals(BigInteger.ZERO)) return false;
+        if (n.equals(BigInteger.TWO) || n.equals(BigInteger.valueOf(3))) {
+            return true;
+        }
 
-        // n - 1 = d * 2^r
+        if (n.mod(BigInteger.TWO).equals(BigInteger.ZERO)) {
+            return false;
+        }
+
         BigInteger d = n.subtract(BigInteger.ONE);
         int r = 0;
 
@@ -62,39 +69,35 @@ public class Probabilistic {
             r++;
         }
 
-        Random rand = new Random();
-
         for (int i = 0; i < k; i++) {
-
-            // a aleatorio en [2, n-2]
             BigInteger a;
+
             do {
-                a = new BigInteger(n.bitLength(), rand);
+                a = new BigInteger(n.bitLength(), random);
             } while (a.compareTo(BigInteger.TWO) < 0 || a.compareTo(n.subtract(BigInteger.TWO)) > 0);
 
-            // x = a^d mod n
             BigInteger x = a.modPow(d, n);
 
-            if (x.equals(BigInteger.ONE) || x.equals(n.subtract(BigInteger.ONE)))
+            if (x.equals(BigInteger.ONE) || x.equals(n.subtract(BigInteger.ONE))) {
                 continue;
+            }
 
-            boolean continueOuter = false;
+            boolean validRound = false;
 
             for (int j = 0; j < r - 1; j++) {
                 x = x.modPow(BigInteger.TWO, n);
 
                 if (x.equals(n.subtract(BigInteger.ONE))) {
-                    continueOuter = true;
+                    validRound = true;
                     break;
                 }
             }
 
-            if (continueOuter)
-                continue;
-
-            return false; // compuesto
+            if (!validRound) {
+                return false;
+            }
         }
 
-        return true; // probablemente primo
+        return true;
     }
 }

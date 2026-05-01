@@ -1,101 +1,71 @@
 package model;
 
+import model.DoublyLinkedList;
+import model.ListException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class DoublyDoublyLinkedListTest {
+class DoublyLinkedListTest {
 
     @Test
-    public void doublyDoublyLinkedListTest() {
+    void doublyLinkedListTest() {
         DoublyLinkedList<Integer> doublyLinkedList = new DoublyLinkedList<>();
-        doublyLinkedList.add(20);
-        doublyLinkedList.add(10);
-        for (int i = 0; i < 20; i++) {
-            doublyLinkedList.add(new Random().nextInt(50));
+        Random random = new Random();
+
+        while (doublyLinkedList.size() < 50) {
+            int value = random.nextInt(100) + 1;
+
+            if (!doublyLinkedList.contains(value)) {
+                doublyLinkedList.add(value);
+            }
         }
-        System.out.println(doublyLinkedList);
 
-        //quiero ver la data del primero y ult nodo de la lista
-        System.out.println("_".repeat(50));
-        System.out.println("getHead: " + doublyLinkedList.getHead().data);
-        System.out.println("getTail: " + doublyLinkedList.getTail().data);
-
-        System.out.println("addFirst(100)"); doublyLinkedList.addFirst(100);
-        System.out.println("addFirst(200)"); doublyLinkedList.addFirst(200);
+        System.out.println("Lista con 50 valores numéricos no repetidos");
         System.out.println(doublyLinkedList);
+        System.out.println("_".repeat(80));
+
         try {
-            System.out.println("Linklist size: "+doublyLinkedList.size());
+            System.out.println("getFirst(): " + doublyLinkedList.getFirst());
+            System.out.println("getLast(): " + doublyLinkedList.getLast());
+            System.out.println("_".repeat(80));
 
-            //probamos contains
-            System.out.println("_".repeat(50));
-            for (int i=0; i<10;i++) {
-                int value = new Random().nextInt(50);
-                System.out.println(
-                        doublyLinkedList.contains(value)
-                                ? "value [" + value + "] exists. Position: "
-                                  + doublyLinkedList.indexOf(value)
-                                : "value [" + value + "] does not exist"
-                );
-            }
+            System.out.println("Búsqueda de 20 valores aleatorios");
 
-            //Probamos removeFirst, removeLast
-            System.out.println("\nremoveFirst: " + doublyLinkedList.removeFirst());
-            System.out.println("removeLast: " + doublyLinkedList.removeLast());
-            System.out.println("removeLast: " + doublyLinkedList.removeLast());
+            for (int i = 1; i <= 20; i++) {
+                int value = random.nextInt(100) + 1;
 
-            //probamos get
-            System.out.println("_".repeat(50));
-            int n =  doublyLinkedList.size();
-            for (int i = 1; i <= n; i++) {
-                System.out.println("get(" + i + ") = " + doublyLinkedList.get(i));
-            }
-
-            System.out.println("_".repeat(50));
-            System.out.println(doublyLinkedList);
-            for (int i = 1; i <= n; i++) {
-                System.out.println(
-                        "get(" + i + ") = " + doublyLinkedList.get(i)
-                                + ", getPrev(" + doublyLinkedList.get(i) + ") = "
-                                + doublyLinkedList.getPrev(doublyLinkedList.get(i))
-                                + ", getNext(" + doublyLinkedList.get(i) + ") = "
-                                + doublyLinkedList.getNext(doublyLinkedList.get(i))
-                );
-            }
-
-            //al final volvemos a mostrar la lista
-            System.out.println("_".repeat(50));
-            System.out.println(doublyLinkedList);
-
-            //probamos los removes
-            for (int i = 0; i < 20; i++) {
-                int value =  new Random().nextInt(50);
-                if(doublyLinkedList.contains(value)) {
-                    System.out.println("remove("+value+") deleted !!!");
-                    doublyLinkedList.remove(value);
+                if (doublyLinkedList.contains(value)) {
+                    System.out.println("Valor encontrado: " + value);
+                    System.out.println("Posición: " + doublyLinkedList.indexOf(value));
+                    System.out.println("Anterior: " + doublyLinkedList.getPrev(value));
+                    System.out.println("Posterior: " + doublyLinkedList.getNext(value));
+                } else {
+                    System.out.println("Valor no encontrado: " + value);
                 }
-            }
-            //al final volvemos a mostrar la lista
-            System.out.println(doublyLinkedList);
 
-            //probamos los removeFirst, removeLast
-            System.out.println("_".repeat(50));
-            for (int i = 0; i < 20; i++) {
-                int value =  new Random().nextInt(50);
-                if(doublyLinkedList.contains(value)) {
-                    System.out.println("removeFirst(): "+doublyLinkedList.removeFirst());
-                    System.out.println("removeLast(): "+doublyLinkedList.removeLast());
-                    System.out.println(doublyLinkedList);
-                }
+                System.out.println("_".repeat(40));
             }
-            //al final volvemos a mostrar la lista
+
+            Integer removedFirst = doublyLinkedList.removeFirst();
+            System.out.println("removeFirst(): " + removedFirst);
+            System.out.println(doublyLinkedList);
+            System.out.println("_".repeat(80));
+
+            Integer removedLast = doublyLinkedList.removeLast();
+            System.out.println("removeLast(): " + removedLast);
+            System.out.println(doublyLinkedList);
+            System.out.println("_".repeat(80));
+
+            Integer valueToRemove = doublyLinkedList.get(random.nextInt(doublyLinkedList.size()) + 1);
+            doublyLinkedList.remove(valueToRemove);
+
+            System.out.println("remove(" + valueToRemove + ")");
+            System.out.println("Elemento eliminado: " + valueToRemove);
             System.out.println(doublyLinkedList);
 
         } catch (ListException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
-
 }

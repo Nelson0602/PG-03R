@@ -1,29 +1,27 @@
 package model;
 
-public class LinkedList <T> implements List<T> {
+public class LinkedList<T> implements List<T> {
 
-    private Node<T> head;//inicio de la lista
-    private Node<T> tail;//final de la lista
-
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
-    public int size() throws ListException {
-        if(isEmpty()){
-            throw new ListException("Linked List is empty");
-        }
+    public int size() {
         Node<T> aux = head;
         int count = 0;
-        while(aux!= null){
+
+        while (aux != null) {
             count++;
             aux = aux.next;
         }
+
         return count;
     }
 
     @Override
     public void clear() {
-        head = tail = null;
-
+        head = null;
+        tail = null;
     }
 
     @Override
@@ -34,29 +32,27 @@ public class LinkedList <T> implements List<T> {
     @Override
     public void add(T element) {
         Node<T> node = new Node<>(element);
-        if(head == null){
+
+        if (isEmpty()) {
             head = node;
             tail = node;
-        }else{
-            //significa que head apunta a un nodo existente
-            Node<T> aux = head;
-            //me muevo por la lista hasta alcanzar el ultimo elemento
-            while(aux.next != null){
-                //aux.next es la flecha
-                aux = aux.next;//lo mueve al siguiente nodo
-            }
-            //cuando se sale del while, aux.next es igual a null
-            aux.next = node;
-            tail = node;//lo ponemos a apuntar al ultimo nodo de la lista
+        } else {
+            tail.next = node;
+            tail = node;
         }
     }
 
     @Override
     public void addFirst(T element) {
         Node<T> node = new Node<>(element);
-        node.next = head;
-        head = node;//para que el nuevo nodo quede de primero
-        if(tail==null) tail = node; //si la lista estaba vacia
+
+        if (isEmpty()) {
+            head = node;
+            tail = node;
+        } else {
+            node.next = head;
+            head = node;
+        }
     }
 
     @Override
@@ -66,155 +62,235 @@ public class LinkedList <T> implements List<T> {
 
     @Override
     public void addInSortedList(T element) {
-        //por implementar
+        Node<T> node = new Node<>(element);
+
+        if (isEmpty()) {
+            head = node;
+            tail = node;
+            return;
+        }
+
+        if (compare(element, head.data) <= 0) {
+            addFirst(element);
+            return;
+        }
+
+        Node<T> aux = head;
+
+        while (aux.next != null && compare(aux.next.data, element) < 0) {
+            aux = aux.next;
+        }
+
+        node.next = aux.next;
+        aux.next = node;
+
+        if (node.next == null) {
+            tail = node;
+        }
     }
 
     @Override
     public void remove(T element) throws ListException {
-        if(isEmpty()){
+        if (isEmpty()) {
             throw new ListException("Linked List is empty");
         }
-        //Caso 1. Cuando el elemento a suprimir es el primero en la lista
-        if(equals(head.data, element)){
-            head = head.next;
-            if(head==null) tail = null; //si la lista quedo vacia
+
+        if (equals(head.data, element)) {
+            removeFirst();
+            return;
         }
-        //Caso general. El elemento a suprimir puede estar en el medio o al final
-        else{
-            Node<T> prev = head; 
-            while(prev.next != null){
-                if(equals(prev.next.data, element)){
-                    Node<T> removed = prev.next;
-                    prev.next = removed.next;
-                    if(prev.next == null) tail = prev; //si se elimino el ultimo
-                    return; 
+
+        Node<T> prev = head;
+
+        while (prev.next != null) {
+            if (equals(prev.next.data, element)) {
+                Node<T> removed = prev.next;
+                prev.next = removed.next;
+
+                if (prev.next == null) {
+                    tail = prev;
                 }
-                prev = prev.next; //Muevo el auxiliar
+
+                return;
             }
+
+            prev = prev.next;
         }
     }
 
     @Override
     public T removeFirst() throws ListException {
-        if(isEmpty()){
+        if (isEmpty()) {
             throw new ListException("Linked List is empty");
         }
+
         T first = head.data;
         head = head.next;
-        if(head==null) tail = null;
+
+        if (head == null) {
+            tail = null;
+        }
+
         return first;
     }
 
     @Override
     public T removeLast() throws ListException {
-        if(isEmpty()){
+        if (isEmpty()) {
             throw new ListException("Linked List is empty");
         }
 
+        T last = tail.data;
+
+        if (head == tail) {
+            clear();
+            return last;
+        }
+
         Node<T> aux = head;
-        Node<T> prev = head;
-        while (aux.next != null){
-            prev = aux; 
+
+        while (aux.next != tail) {
             aux = aux.next;
         }
-        T last = aux.data; 
-        prev.next = null;
-        tail = prev;
 
+        aux.next = null;
+        tail = aux;
 
-        if (prev == aux) clear();
         return last;
     }
 
     @Override
-    public boolean contains(T element) throws ListException {
-        if(isEmpty()){
-            throw new ListException("Linked List is empty");
-        }
+    public boolean contains(T element) {
         Node<T> aux = head;
-        while(aux!= null){
-            if(equals(aux.data, element)) return true;
+
+        while (aux != null) {
+            if (equals(aux.data, element)) {
+                return true;
+            }
+
             aux = aux.next;
         }
+
         return false;
     }
 
     @Override
-    public void sort() throws ListException {
+    public void sort() {
+        if (isEmpty() || head.next == null) {
+            return;
+        }
 
-        //ordenar es cambiar enlaces pero de 3 nada mas
+        boolean swapped;
+
+        do {
+            swapped = false;
+            Node<T> aux = head;
+
+            while (aux.next != null) {
+                if (compare(aux.data, aux.next.data) > 0) {
+                    T temp = aux.data;
+                    aux.data = aux.next.data;
+                    aux.next.data = temp;
+                    swapped = true;
+                }
+
+                aux = aux.next;
+            }
+
+        } while (swapped);
     }
 
     @Override
-    public int indexOf(T element) throws ListException {
-        if(isEmpty()){
-            throw new ListException("Linked List is empty");
-        }
+    public int indexOf(T element) {
         Node<T> aux = head;
         int index = 1;
-        while(aux!= null){
-            if(equals(aux.data, element)) return index;
+
+        while (aux != null) {
+            if (equals(aux.data, element)) {
+                return index;
+            }
+
             index++;
             aux = aux.next;
         }
-        return -1; 
+
+        return -1;
     }
 
     @Override
     public T getFirst() throws ListException {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new ListException("Linked list is empty");
         }
+
         return head.data;
     }
 
     @Override
     public T getLast() throws ListException {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new ListException("Linked list is empty");
         }
+
         return tail.data;
     }
 
     @Override
-    public T getPrev(T element) throws ListException {
-        if(isEmpty() || equals(head.data, element)) return null;
+    public T getPrev(T element) {
+        if (isEmpty() || equals(head.data, element)) {
+            return null;
+        }
+
         Node<T> aux = head;
-        while (aux.next != null){
-            if(equals(aux.next.data, element)){
+
+        while (aux.next != null) {
+            if (equals(aux.next.data, element)) {
                 return aux.data;
             }
+
             aux = aux.next;
         }
+
         return null;
     }
 
     @Override
-    public T getNext(T element) throws ListException {
-        if(isEmpty()) return null;
+    public T getNext(T element) {
         Node<T> aux = head;
-        while (aux != null){
-            if(equals(aux.data, element)){
-                if(aux.next != null) return aux.next.data;
-                else return null;
+
+        while (aux != null) {
+            if (equals(aux.data, element)) {
+                if (aux.next != null) {
+                    return aux.next.data;
+                }
+
+                return null;
             }
+
             aux = aux.next;
         }
+
         return null;
     }
 
     @Override
-    public T get(int index) throws ListException {
-        if (isEmpty()){
-            throw new ListException("Linked list is empty");
+    public T get(int index) {
+        if (index <= 0) {
+            return null;
         }
+
         Node<T> aux = head;
         int count = 1;
-        while(aux != null){
-            if (count == index) return aux.data;
+
+        while (aux != null) {
+            if (count == index) {
+                return aux.data;
+            }
+
             count++;
             aux = aux.next;
         }
+
         return null;
     }
 
@@ -226,34 +302,67 @@ public class LinkedList <T> implements List<T> {
         return head;
     }
 
+    public Node<T> getNodeByIndex(int index) {
+        if (index <= 0) {
+            return null;
+        }
+
+        Node<T> aux = head;
+        int pos = 1;
+
+        while (aux != null) {
+            if (pos == index) {
+                return aux;
+            }
+
+            aux = aux.next;
+            pos++;
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("HEAD → ");
         Node<T> aux = head;
-        while(aux != null){
+
+        while (aux != null) {
             sb.append("[").append(aux.data).append("]");
-            if(aux.next != null) sb.append(" → ");
+
+            if (aux.next != null) {
+                sb.append(" → ");
+            }
+
             aux = aux.next;
         }
+
         sb.append(" → NULL");
         return sb.toString();
     }
 
-    public Node<T> getNodeByIndex(int index) throws ListException{
-        if(isEmpty()){
-            throw new ListException("Linked list is empty");
-        }
-        Node<T> aux = head;
-        int pos = 1; 
-        while(aux != null){
-            if (pos == index) return aux;
-            aux = aux.next;
-            pos++;
-        }
-        return null;
+    private boolean equals(T a, T b) {
+        return a == null ? b == null : a.equals(b);
     }
 
-    private boolean equals (T a, T b){
-        return  a == null ? b == null : a.equals(b);
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private int compare(T a, T b) {
+        if (a == null && b == null) {
+            return 0;
+        }
+
+        if (a == null) {
+            return -1;
+        }
+
+        if (b == null) {
+            return 1;
+        }
+
+        if (a instanceof Comparable) {
+            return ((Comparable) a).compareTo(b);
+        }
+
+        return a.toString().compareTo(b.toString());
     }
 }

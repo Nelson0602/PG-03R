@@ -1,8 +1,22 @@
 package model;
 
 public abstract class Person {
-    private String id;
 
+    private String id;
+    private String name;
+    private int age;
+    private double height;
+    private double weight;
+
+    public Person(String id, String name, int age, double height, double weight) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.height = height;
+        this.weight = weight;
+    }
+
+    public abstract String getRoleDescription();
 
     public String getId() {
         return id;
@@ -29,11 +43,19 @@ public abstract class Person {
     }
 
     public double getHeigth() {
-        return heigth;
+        return height;
     }
 
-    public void setHeigth(double heigth) {
-        this.heigth = heigth;
+    public void setHeigth(double height) {
+        this.height = height;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
     }
 
     public double getWeight() {
@@ -44,23 +66,8 @@ public abstract class Person {
         this.weight = weight;
     }
 
-    public Person(String id, String name, int age, double heigth, double weight) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.heigth = heigth;
-        this.weight = weight;
+    @Override
+    public String toString() {
+        return id + " - " + name + " | Edad: " + age + " | Altura: " + height + " | Peso: " + weight + " | " + getRoleDescription();
     }
-
-    private String name;
-    private int age;
-    private double heigth;
-    private double  weight;
-
-
-
-    public abstract String getRoleDescription();
-
-
-
 }

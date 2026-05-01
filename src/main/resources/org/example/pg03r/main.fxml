@@ -21,6 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import java.lang.String?>
+<?import javafx.scene.control.Slider?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="703.0" prefWidth="1031.0"
@@ -89,8 +90,16 @@
                                                 <Button fx:id="btnClean" styleClass="btn-ghost" text="Limpiar" />
                                             </children>
                                         </HBox>
-                                        <Label styleClass="param-label" text="Registro de Operaciones" />
-                                        <ListView fx:id="listViewOperations" prefHeight="200.0" />
+                                <Label styleClass="param-label" text="Registro de Operaciones" />
+                                <ListView fx:id="listViewOperations" prefHeight="155.0" />
+
+                                <VBox spacing="8.0" styleClass="info-box">
+                                    <children>
+                                        <Label styleClass="info-title" text="“Test de Primalidad” utilizando el algoritmo de Miller-Rabin" />
+                                        <TextArea editable="false" prefHeight="185.0" wrapText="true" styleClass="info-box"
+                                                  text="Algoritmo probabilístico eficiente utilizado para determinar si un número entero grande es primo o compuesto.&#10;A diferencia de los métodos deterministas, este test es muy rápido, lo que lo hace fundamental en criptografía, como en RSA, para generar números primos de gran tamaño en poco tiempo.&#10;&#10;Lista de Big Integers para pruebas:&#10;1000000007, 18446744073709551557, 1000000000000000003, 2305843009213693951" />
+                                    </children>
+                                    </VBox>
                                     </children>
                                 </VBox>
                             </items>
@@ -105,14 +114,12 @@
                                 <VBox spacing="8.0" styleClass="panel">
                                     <children>
                                         <Label styleClass="panel-title" text="Búsqueda aleatoria en un arreglo con un máximo de intentos permitidos" />
-                                        <VBox alignment="CENTER" spacing="5.0">
-                                            <children>
-                                                <Label fx:id="lblArrayContext" text="[66, 93, 16, 17, 26, 38, 21, 30, 63, 58, ...] (n=64)" />
-                                                <Canvas fx:id="canvasRandomSearch" height="180.0" width="540.0" />
-                                                <Label fx:id="lblSearchStatus" style="-fx-text-fill: red;" text="VALOR NO ENCONTRADO" visible="false" />
-                                            </children>
-                                        </VBox>
-                                        <TableView fx:id="tableRandomResults" prefHeight="256.0">
+                                        <TextField fx:id="lblArrayContext" editable="false" />
+                                        <Canvas fx:id="canvasRandomSearch" height="320.0" width="760.0" />
+                                        <Label fx:id="lblSearchStatus" style="-fx-text-fill: green; -fx-font-weight: bold;" text="VALOR ENCONTRADO" visible="false" />
+                                        <Label styleClass="param-label" text="Lista de elementos encontrados con el algoritmo Random Search" />
+
+                                        <TableView fx:id="tableRandomResults" prefHeight="210.0">
                                             <columns>
                                                 <TableColumn fx:id="colRSValue" prefWidth="135.0" text="Valor" />
                                                 <TableColumn fx:id="colRSIndex" prefWidth="135.0" text="Indice" />
@@ -122,19 +129,58 @@
                                         </TableView>
                                     </children>
                                 </VBox>
+
                                 <VBox spacing="10.0" styleClass="panel">
                                     <children>
                                         <Label styleClass="action-label" text="Parámetros" />
-                                        <Spinner fx:id="spSearchRange" />
-                                        <HBox spacing="15.0">
+
+                                        <Slider fx:id="sliderSearchRange"
+                                                min="0.0"
+                                                max="100.0"
+                                                value="20.0"
+                                                majorTickUnit="5.0"
+                                                minorTickCount="0"
+                                                showTickLabels="true"
+                                                showTickMarks="true"
+                                                snapToTicks="true" />
+
+                                        <HBox spacing="10.0">
                                             <children>
-                                                <VBox><Label styleClass="param-label" text="Valor:" /><TextField fx:id="txfSearchValue" prefWidth="100.0" /></VBox>
-                                                <VBox><Label styleClass="param-label" text="Max Attempts:" /><TextField fx:id="txfMaxAttempts" prefWidth="100.0" /></VBox>
+                                                <VBox>
+                                                    <children>
+                                                        <Label styleClass="param-label" text="Valor:" />
+                                                        <TextField fx:id="txfSearchValue" prefWidth="155.0" />
+                                                    </children>
+                                                </VBox>
+
+                                                <VBox>
+                                                    <children>
+                                                        <Label styleClass="param-label" text="Max Attempts:" />
+                                                        <TextField fx:id="txfMaxAttempts" prefWidth="155.0" />
+                                                    </children>
+                                                </VBox>
+
                                                 <Button fx:id="btnGenerateRS" styleClass="btn-primary" text="Generar aleatorio" />
                                             </children>
                                         </HBox>
-                                        <Button fx:id="btnRunRandomSearch" styleClass="btn-primary" text="Random Search" />
-                                        <ListView fx:id="listViewRSLog" prefHeight="200.0" />
+
+                                        <HBox spacing="10.0">
+                                            <children>
+                                                <Button fx:id="btnRunRandomSearch" styleClass="btn-primary" text="Random Search" />
+                                                <Button fx:id="btnCleanRS" styleClass="btn-ghost" text="Limpiar" />
+                                            </children>
+                                        </HBox>
+
+                                        <Label styleClass="param-label" text="Registro de Operaciones" />
+                                        <ListView fx:id="listViewRSLog" prefHeight="160.0" />
+
+                                        <VBox spacing="8.0" styleClass="info-box">
+                                            <children>
+                                                <Label styleClass="info-title" text="Búsqueda aleatoria en un arreglo" />
+                                                <TextArea editable="false" prefHeight="170.0" wrapText="true" styleClass="info-box"
+                                                          text="Devuelve un arreglo de 2 elementos con el índice encontrado y el número de intentos realizados.&#10;Si el índice es -1 significa que el elemento no fue encontrado en el máximo de intentos permitidos." />
+                                            </children>
+                                        </VBox>
                                     </children>
                                 </VBox>
                             </items>
@@ -148,10 +194,26 @@
                             <items>
                                 <VBox spacing="10.0" styleClass="panel">
                                     <children>
-                                        <Label styleClass="panel-title" text="Lista enlazada simple: HEAD ➔ nodos ➔ NULL" />
-                                        <ScrollPane prefHeight="300.0"><content><Canvas fx:id="canvasLinkedList" height="280.0" width="1000.0" /></content></ScrollPane>
-                                        <TextField fx:id="txfListRepresentation" editable="false" />
-                                        <TableView fx:id="tableListData" prefHeight="200.0">
+                                        <Label styleClass="panel-title" text="Lista enlazada simple: HEAD ➜ nodos ➜ NULL" />
+
+                                        <ScrollPane prefHeight="320.0">
+                                            <content>
+                                                <Canvas fx:id="canvasLinkedList" height="300.0" width="1000.0" />
+                                            </content>
+                                        </ScrollPane>
+
+                                        <VBox spacing="5.0" styleClass="info-box">
+                                            <children>
+                                                <Label text="Representación:" styleClass="info-title" />
+                                                <TextField fx:id="txfListRepresentation" editable="false" />
+                                            </children>
+                                        </VBox>
+
+                                        <Label fx:id="lblLinkedListStatus" text="Insertado al inicio: 50" style="-fx-text-fill: #16a085; -fx-font-weight: bold;" />
+
+                                        <Label text="Contenido de la Lista Enlazada Simple" styleClass="panel-title" />
+
+                                        <TableView fx:id="tableListData" prefHeight="230.0">
                                             <columns>
                                                 <TableColumn fx:id="colListPos" prefWidth="180.0" text="Posición" />
                                                 <TableColumn fx:id="colListElement" prefWidth="180.0" text="Elemento" />
@@ -160,23 +222,40 @@
                                         </TableView>
                                     </children>
                                 </VBox>
+
                                 <VBox spacing="10.0" styleClass="panel">
                                     <children>
                                         <Label styleClass="action-label" text="Valor" />
-                                        <TextField fx:id="txfListValue" maxWidth="150.0" />
+                                        <TextField fx:id="txfListValue" maxWidth="180.0" text="50" />
+                                        <Label text="(Enter = Agregar al final)" />
+
+                                        <Label text="Operaciones" styleClass="param-label" />
+
                                         <HBox spacing="10.0">
                                             <children>
                                                 <Button fx:id="btnAddFirst" styleClass="btn-primary" text="← Agregar inicio" />
                                                 <Button fx:id="btnAddLast" styleClass="btn-primary" text="Agregar final →" />
                                             </children>
                                         </HBox>
+
                                         <HBox spacing="10.0">
                                             <children>
                                                 <Button fx:id="btnSearchList" styleClass="btn-primary" text="🔍 Buscar" />
                                                 <Button fx:id="btnRemoveList" styleClass="btn-accent" text="🗑 Eliminar" />
+                                                <Button fx:id="btnCleanList" styleClass="btn-ghost" text="↺ Limpiar Todo" />
                                             </children>
                                         </HBox>
-                                        <ListView fx:id="listViewListLog" prefHeight="150.0" />
+
+                                        <Label text="Registro de Operaciones" styleClass="param-label" />
+                                        <ListView fx:id="listViewListLog" prefHeight="160.0" />
+
+                                        <VBox styleClass="info-box">
+                                            <children>
+                                                <Label text="Estructura del Nodo" styleClass="info-title" />
+                                                <TextArea editable="false" prefHeight="120.0" styleClass="info-box"
+                                                          text="class Node&lt;T&gt; {&#10;    T data;&#10;    Node&lt;T&gt; next;&#10;}" />
+                                            </children>
+                                        </VBox>
                                     </children>
                                 </VBox>
                             </items>

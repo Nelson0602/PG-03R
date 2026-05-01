@@ -35,7 +35,7 @@ class SearchTest {
             System.out.println(binSearchResult("java.util.Arrays", arr, value)); //Arrays.binarySearch(arr, value);
             System.out.println(binSearchResult("java.util.Collections", arr, value)); //Collections.binarySearch(list, value);
             System.out.println(binSearchResult("recursive model.Search", arr, value)); //Search.binarySearch(arr, value, 0, arr.length - 1);
-            System.out.println(binSearchResult("iterative model.Search", arr, value)); //Search.binarySearch(arr, value); 
+            System.out.println(binSearchResult("iterative model.Search", arr, value)); //Search.binarySearch(arr, value)
             System.out.println("_".repeat(50));
         }
     }

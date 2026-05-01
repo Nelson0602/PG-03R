@@ -6,46 +6,61 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Random;
 
-class ProbabilistcTest {
-
-    @Test
-    public void randomSearchTest(){
-        Probabilistic p = new Probabilistic();
-        int[] arr = new Random().ints(100, 1, 100)
-                .distinct().limit(100).toArray();
-        System.out.println("Array: " + Arrays.toString(arr));
-
-        for (int i = 0; i < 20; i++) {
-            int value = new Random().nextInt(100);
-            int attempts = new  Random().nextInt(10,50);
-            int[] result = p.randomSearch(arr, value, attempts);
-
-            System.out.println(
-                    result[0] != -1 ? "Item [" + value + "] found in index: " + result[0] + ". Attempts: " + result[1] +
-                            " Max attempts allowed: " + attempts
-                            : "Item[" + value + "] not found. Max attempts: " + result[1]
-            );
-        }
-    }
+class ProbabilisticTest {
 
     @Test
     void millerRabinTest() {
         Probabilistic p = new Probabilistic();
-        System.out.println("Rabin-Miler Probability for Big Numbers:");
-        System.out.println("\nNumber: " + util.Utility.format(29341)
-                + ": \n" + p.millerRabin("29341"));
-        System.out.println("\nNumber: " + util.Utility.format(131071)
-                + ": \n" + p.millerRabin("131071"));
-        System.out.println("\nNumber: " + util.Utility.format(214748)
-                + ": \n" + p.millerRabin("214748"));
-        System.out.println("\nNumber: " + util.Utility.format(483647)
-                + ": \n" + p.millerRabin("483647"));
-        System.out.println("\nNumber: " + util.Utility.format(2147483647)
-                + ": \n" + p.millerRabin("2147483647"));
-        System.out.println("\nNumber: " + util.Utility.format(1000000007)
-                + ": \n" + p.millerRabin("1000000007"));
-        System.out.println("\nNumber: " + util.Utility.formatBig("2305843009213693951")
-                + ": \n" + p.millerRabin("2305843009213693951"));
+
+        String[] numbers = {
+                "29341",
+                "131071",
+                "214748",
+                "483647",
+                "2147483647",
+                "2305843009213693951"
+        };
+
+        System.out.println("Miller-Rabin Test");
+
+        for (String number : numbers) {
+            System.out.println("Number: " + number);
+            System.out.println(p.millerRabin(number));
+            System.out.println("_".repeat(50));
+        }
     }
 
+    @Test
+    void randomSearchTest() {
+        Probabilistic p = new Probabilistic();
+        Random random = new Random();
+
+        int[] arr = new int[100];
+
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = i + 1;
+        }
+
+        int value = random.nextInt(100) + 1;
+        int attempts = 20;
+
+        System.out.println("Random Search Test");
+        System.out.println("Array: " + Arrays.toString(arr));
+        System.out.println("Value to search: " + value);
+        System.out.println("_".repeat(50));
+
+        for (int i = 1; i <= 20; i++) {
+            int[] result = p.randomSearch(arr, value, attempts);
+
+            if (result[0] != -1) {
+                System.out.println("Search " + i + ": Item [" + value + "] found in index: " + result[0]
+                        + ". Attempts: " + result[1]
+                        + ". Max attempts allowed: " + attempts);
+            } else {
+                System.out.println("Search " + i + ": Item [" + value + "] not found. Attempts: "
+                        + result[1]
+                        + ". Max attempts allowed: " + attempts);
+            }
+        }
+    }
 }
