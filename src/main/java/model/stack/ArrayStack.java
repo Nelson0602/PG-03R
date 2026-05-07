@@ -61,28 +61,23 @@ public class ArrayStack<T> implements MyStack {
 
     @Override
     public String toString() {
-
-        if (isEmpty()) return "ArrayStack is empty";
-        StringBuilder sb = new StringBuilder("TOP → ");
+        if (isEmpty()) return "Array Stack is Empty";
+        StringBuilder sb = new StringBuilder(" → ");
         try {
-            ArrayStack<T> auxStack = new ArrayStack<>(n);
+            LinkedStack<T> auxStack = new LinkedStack<>();
             while (!isEmpty()) {
-                sb.append("[").append(peek()).append("]");
+                sb.append("[").append(peek()).append("] ");
                 auxStack.push(pop());
-                if(isEmpty()) sb.append(",");
+                if(isEmpty()) sb.append(", ");
             }
-
-            while (!auxStack.isEmpty()) {
+            //dejamos la pila original
+            while (!auxStack.isEmpty())
                 push(auxStack.pop());
-            }
-
 
         } catch (StackException e) {
             System.out.println(e.getMessage());
         }
-        sb.append("-> BOTTOM");
+        sb.append(" → BOTTOM");
         return sb.toString();
-
-
     }
 }
