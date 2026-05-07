@@ -1,7 +1,7 @@
 package model;
 
-import model.DoublyLinkedList;
-import model.ListException;
+import model.LinkedList.DoublyLinkedList;
+import model.LinkedList.ListException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;

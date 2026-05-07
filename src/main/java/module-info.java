@@ -9,4 +9,6 @@ module org.example.pg03r {
     exports model;
     exports controller;
     exports util;
+    exports model.LinkedList;
+    opens model.LinkedList to javafx.fxml;
 }

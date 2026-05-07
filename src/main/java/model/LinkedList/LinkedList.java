@@ -1,6 +1,8 @@
-package model;
+package model.LinkedList;
 
-public class DoublyLinkedList<T> implements List<T> {
+import model.Node;
+
+public class LinkedList<T> implements List<T> {
 
     private Node<T> head;
     private Node<T> tail;
@@ -38,7 +40,6 @@ public class DoublyLinkedList<T> implements List<T> {
             tail = node;
         } else {
             tail.next = node;
-            node.prev = tail;
             tail = node;
         }
     }
@@ -52,7 +53,6 @@ public class DoublyLinkedList<T> implements List<T> {
             tail = node;
         } else {
             node.next = head;
-            head.prev = node;
             head = node;
         }
     }
@@ -77,11 +77,6 @@ public class DoublyLinkedList<T> implements List<T> {
             return;
         }
 
-        if (compare(element, tail.data) >= 0) {
-            addLast(element);
-            return;
-        }
-
         Node<T> aux = head;
 
         while (aux.next != null && compare(aux.next.data, element) < 0) {
@@ -89,9 +84,11 @@ public class DoublyLinkedList<T> implements List<T> {
         }
 
         node.next = aux.next;
-        node.prev = aux;
-        aux.next.prev = node;
         aux.next = node;
+
+        if (node.next == null) {
+            tail = node;
+        }
     }
 
     @Override
@@ -100,26 +97,26 @@ public class DoublyLinkedList<T> implements List<T> {
             throw new ListException("Linked List is empty");
         }
 
-        Node<T> aux = head;
+        if (equals(head.data, element)) {
+            removeFirst();
+            return;
+        }
 
-        while (aux != null) {
-            if (equals(aux.data, element)) {
-                if (aux == head) {
-                    removeFirst();
-                    return;
+        Node<T> prev = head;
+
+        while (prev.next != null) {
+            if (equals(prev.next.data, element)) {
+                Node<T> removed = prev.next;
+                prev.next = removed.next;
+
+                if (prev.next == null) {
+                    tail = prev;
                 }
 
-                if (aux == tail) {
-                    removeLast();
-                    return;
-                }
-
-                aux.prev.next = aux.next;
-                aux.next.prev = aux.prev;
                 return;
             }
 
-            aux = aux.next;
+            prev = prev.next;
         }
     }
 
@@ -130,12 +127,10 @@ public class DoublyLinkedList<T> implements List<T> {
         }
 
         T first = head.data;
+        head = head.next;
 
-        if (head == tail) {
-            clear();
-        } else {
-            head = head.next;
-            head.prev = null;
+        if (head == null) {
+            tail = null;
         }
 
         return first;
@@ -151,10 +146,17 @@ public class DoublyLinkedList<T> implements List<T> {
 
         if (head == tail) {
             clear();
-        } else {
-            tail = tail.prev;
-            tail.next = null;
+            return last;
         }
+
+        Node<T> aux = head;
+
+        while (aux.next != tail) {
+            aux = aux.next;
+        }
+
+        aux.next = null;
+        tail = aux;
 
         return last;
     }
@@ -237,10 +239,18 @@ public class DoublyLinkedList<T> implements List<T> {
 
     @Override
     public T getPrev(T element) {
-        Node<T> node = findNode(element);
+        if (isEmpty() || equals(head.data, element)) {
+            return null;
+        }
 
-        if (node != null && node.prev != null) {
-            return node.prev.data;
+        Node<T> aux = head;
+
+        while (aux.next != null) {
+            if (equals(aux.next.data, element)) {
+                return aux.data;
+            }
+
+            aux = aux.next;
         }
 
         return null;
@@ -248,10 +258,18 @@ public class DoublyLinkedList<T> implements List<T> {
 
     @Override
     public T getNext(T element) {
-        Node<T> node = findNode(element);
+        Node<T> aux = head;
 
-        if (node != null && node.next != null) {
-            return node.next.data;
+        while (aux != null) {
+            if (equals(aux.data, element)) {
+                if (aux.next != null) {
+                    return aux.next.data;
+                }
+
+                return null;
+            }
+
+            aux = aux.next;
         }
 
         return null;
@@ -315,7 +333,7 @@ public class DoublyLinkedList<T> implements List<T> {
             sb.append("[").append(aux.data).append("]");
 
             if (aux.next != null) {
-                sb.append(" ←→ ");
+                sb.append(" → ");
             }
 
             aux = aux.next;
@@ -323,20 +341,6 @@ public class DoublyLinkedList<T> implements List<T> {
 
         sb.append(" → NULL");
         return sb.toString();
-    }
-
-    private Node<T> findNode(T element) {
-        Node<T> aux = head;
-
-        while (aux != null) {
-            if (equals(aux.data, element)) {
-                return aux;
-            }
-
-            aux = aux.next;
-        }
-
-        return null;
     }
 
     private boolean equals(T a, T b) {

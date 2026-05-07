@@ -13,12 +13,12 @@ import util.BigIntegerSpinnerValueFactory;
 import model.PainterMillerRabin;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import model.LinkedList;
-import model.LinkedListResult;
-import model.ListException;
-import model.DoublyLinkedList;
-import model.DoublyLinkedListResult;
-import model.Employee;
+import model.LinkedList.LinkedList;
+import model.LinkedList.LinkedListResult;
+import model.LinkedList.ListException;
+import model.LinkedList.DoublyLinkedList;
+import model.LinkedList.DoublyLinkedListResult;
+import model.LinkedList.Employee;
 import javafx.scene.control.Slider;
 
 public class MainController {

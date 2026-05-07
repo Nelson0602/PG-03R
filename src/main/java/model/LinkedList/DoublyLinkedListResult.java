@@ -1,4 +1,4 @@
-package model;
+package model.LinkedList;
 
 import javafx.beans.property.SimpleStringProperty;
 

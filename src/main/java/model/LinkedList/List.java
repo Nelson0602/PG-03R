@@ -1,4 +1,4 @@
-package model;
+package model.LinkedList;
 
 public interface List<T> {
     public int size() throws ListException; // Devuelve el número de elementos en la lista

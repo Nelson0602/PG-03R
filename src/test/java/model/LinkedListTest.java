@@ -1,5 +1,8 @@
 package model;
 
+import model.LinkedList.Employee;
+import model.LinkedList.LinkedList;
+import model.LinkedList.ListException;
 import org.junit.jupiter.api.Test;
 
 class LinkedListTest {
