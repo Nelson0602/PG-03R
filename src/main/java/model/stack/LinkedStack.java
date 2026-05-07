@@ -6,34 +6,50 @@ public class LinkedStack<T> implements MyStack<T> {
     private Node<T> top;
     private int size;
 
+    public LinkedStack(){
+        top = null;
+        size = 0;
+    }
+
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public void clear() {
+        top = null;
+        size = 0;
 
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return top == null;
     }
 
     @Override
     public T peek() throws StackException {
-        return null;
+        if (isEmpty()) throw new StackException("Linked Stack is empty");
+        return top.data;
     }
 
     @Override
     public T top() throws StackException {
-        return null;
+        if (isEmpty()) throw new StackException("Linked Stack is empty");
+        return top.data;
     }
 
     @Override
     public void push(T element) throws StackException {
-
+        Node<T> node = new Node<>(element);
+        if(isEmpty()){
+            top = node;
+        } else {
+            node.next = top;
+            top = node;
+        }
+        size++;
     }
 
     @Override
