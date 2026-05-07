@@ -3,39 +3,42 @@ package model.stack;
 public class ArrayStack<T> implements MyStack<T> {
 
     private int n;
-    private int tOP;
+    private int top;
     private T[] data;
 
     public ArrayStack(int n) {
         if (n <= 0) System.exit(1);
         this.n = n;
-        this.tOP = -1;
+        this.top = -1;
         this.data = (T[]) new Object[n];
     }
 
     @Override
     public int size() {
-        return 0;
+        return top+1;
     }
 
     @Override
     public void clear() {
-
+        this.top = -1;
+        this.data = (T[]) new Object[n];
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return top==-1;
     }
 
     @Override
     public T peek() throws StackException {
-        return null;
+        if(isEmpty()) throw new StackException("Array Stack is empty");
+        return this.data[top];
     }
 
     @Override
     public T top() throws StackException {
-        return null;
+        if(isEmpty()) throw new StackException("Array Stack is empty");
+        return this.data[top];
     }
 
     @Override
