@@ -54,7 +54,11 @@ public class LinkedStack<T> implements MyStack<T> {
 
     @Override
     public T pop() throws StackException {
-        return null;
+        if (isEmpty()) throw new StackException("Linked Stack is empty");
+        T data = top.data;
+        top = top.next;
+        size--;
+        return data;
     }
 
     @Override
