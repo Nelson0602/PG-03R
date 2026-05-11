@@ -64,7 +64,7 @@ public class LinkedStack<T> implements MyStack<T> {
     @Override
     public String toString() {
         if (isEmpty()) return "Linked Stack is Empty";
-        StringBuilder sb = new StringBuilder(" → ");
+        StringBuilder sb = new StringBuilder("TOP → ");
         try {
             LinkedStack<T> auxStack = new LinkedStack<>();
             while (!isEmpty()) {
